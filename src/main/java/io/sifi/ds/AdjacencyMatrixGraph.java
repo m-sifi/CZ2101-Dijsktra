@@ -15,8 +15,10 @@ public class AdjacencyMatrixGraph extends AbstractGraph {
         assert u > 0 && u <= V;
         assert v > 0 && v <= V;
 
+        if(matrix[u-1][v-1] == 0)
+            E++;
+
         matrix[u-1][v-1] = weight;
-        E++;
     }
 
     public int getWeight(int u, int v) {
