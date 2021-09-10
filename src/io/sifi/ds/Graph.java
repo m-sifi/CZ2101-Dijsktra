@@ -1,35 +1,56 @@
 package io.sifi.ds;
 
-import java.util.Arrays;
+import java.util.Random;
 
-public class Graph {
+public final class Graph {
 
-    public int matrix[][];
+    public static final int MIN_WEIGHT = 5;
+    public static final int MAX_WEIGHT = 20;
 
-    private int V;
-    private int E;
+    public static void Random(AbstractGraph g, int E) {
+        int V = g.getV();
 
-    public Graph(int V) {
-        assert V > 0;
-        this.V = V;
-        this.E = 0;
+        if(E < V)
+            throw new RuntimeException("|E| must be at least >= |V|");
 
-        matrix = new int[V][V];
+        Random random = new Random();
+        ConnectEdges(g);
+        GenerateRandomEdges(g, E);
     }
 
-    public int getV() { return V; }
-    public int getE() { return E; }
+    private static void GenerateRandomEdges(AbstractGraph g, int E) {
+        Random random = new Random();
+        int V = g.getV();
+        int u, v = -1;
 
-    public void addEdge(int u, int v, int weight) {
-        assert u > 0 && u <= V;
-        assert v > 0 && v <= V;
+        do {
+            u = RandomV(random, V);
+            v = RandomV(random, V);
+            int weight = RandomWeight(random);
 
-        matrix[u-1][v-1] = weight;
-        E++;
+            g.addEdge(u, v, weight);
+        } while(u == v || g.getWeight(u, v) != 0 && g.getE() < E);
     }
 
-    @Override
-    public String toString() {
-        return Arrays.deepToString(matrix).replace("], ", "]\n");
+    private static void ConnectEdges(AbstractGraph g) {
+        Random random = new Random();
+        int V = g.getV();
+
+        for(int u = 0; u < V; u++) {
+            int v = (u+1) % V;
+            int weight = RandomWeight(random);
+
+            g.addEdge(u+1, v+1, weight);
+        }
+
+        g.addEdge(V, 1, RandomWeight(random));
+    }
+
+    private static int RandomV(Random rand, int V) {
+        return rand.nextInt(V) + 1; // Generates from 1 - V;
+    }
+
+    private static int RandomWeight(Random rand) {
+        return MIN_WEIGHT + rand.nextInt(MAX_WEIGHT - MIN_WEIGHT); // Generates from MIN_WEIGHT - MAX_WEIGHT;
     }
 }

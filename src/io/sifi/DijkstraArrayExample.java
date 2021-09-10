@@ -1,46 +1,33 @@
 package io.sifi;
 
+import io.sifi.ds.AdjacencyMatrixGraph;
 import io.sifi.ds.Graph;
 import io.sifi.ds.Node;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Scanner;
 
 public class DijkstraArrayExample {
 
     public static final int INFINITY = Integer.MAX_VALUE;
 
     public static void main(String[] args) {
-        // https://www.geeksforgeeks.org/wp-content/uploads/Fig-11.jpg
-        Graph g = new Graph(9);
-        g.addEdge(1, 2, 4);
-        g.addEdge(1, 8, 8);
 
-        g.addEdge(2, 3, 8);
-        g.addEdge(2, 8, 11);
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Please enter |V|: ");
+        int V = sc.nextInt();
 
-        g.addEdge(3, 4, 7);
-        g.addEdge(3, 6, 4);
-        g.addEdge(3, 9, 2);
+        System.out.printf("Please enter |E|: ");
+        int E = sc.nextInt();
 
-        g.addEdge(4, 5, 9);
-        g.addEdge(4, 6, 14);
+        if(E < V)
+            throw new RuntimeException("|E| has to be >= |V|");
 
-        g.addEdge(5, 6, 10);
-
-        g.addEdge(6, 7, 2);
-
-        g.addEdge(7, 8, 1);
-        g.addEdge(7, 6, 6);
-
-        g.addEdge(8, 9, 7);
-
-        System.out.println(g);
-
+        AdjacencyMatrixGraph g = new AdjacencyMatrixGraph(20);
+        Graph.Random(g, E);
         Dijikstra(g, 1);
     }
 
-    public static void Dijikstra(Graph g, int source) {
+    public static void Dijikstra(AdjacencyMatrixGraph g, int source) {
         int V = g.getV();
         Node[] nodes = new Node[V];
 
@@ -61,7 +48,7 @@ public class DijkstraArrayExample {
         Print(g, nodes);
     }
 
-    public static int MinDistance(Graph g, Node[] nodes) {
+    public static int MinDistance(AdjacencyMatrixGraph g, Node[] nodes) {
         int min = INFINITY;
         int index = -1;
         for(int i = 0; i < g.getV(); i++) {
@@ -74,7 +61,7 @@ public class DijkstraArrayExample {
         return index;
     }
 
-    public static void Print(Graph g, Node nodes[]) {
+    public static void Print(AdjacencyMatrixGraph g, Node nodes[]) {
         System.out.println("Vertex \t\t Distance from Source");
         for (int i = 0; i < g.getV(); i++)
             System.out.println(i+1 + " \t\t " + nodes[i].distance);
